@@ -2,7 +2,7 @@
 
 ## プロジェクトの目的
 
-Math Answer Paste は、数学・情報系の問題文をローカルの Ollama に送り、最終回答を `[ ]` 形式で取り出す Chrome 拡張です。
+Math Answer Paste は、数学・情報系の問題文をローカルの Ollama に送り、答えだけを1行で取り出す Chrome 拡張です。
 
 ## Chrome拡張としての注意点
 
@@ -14,7 +14,10 @@ Math Answer Paste は、数学・情報系の問題文をローカルの Ollama 
 ## Ollama API連携の注意点
 
 - 既定URLは `http://localhost:11434/api/chat` です。
+- 既定モデルは `qwen3:8b` です。
 - `stream: false` を使います。
+- 過去会話は送らず、毎回現在の `system` と `user` だけを `messages` に入れます。
+- user message の先頭には `/no_think` を入れます。
 - fetch失敗時は、Ollama未起動、モデル未インストール、URL誤りを疑えるメッセージにします。
 
 ## APIキーを使わない方針
@@ -29,7 +32,7 @@ Math Answer Paste は、数学・情報系の問題文をローカルの Ollama 
 
 - `js/prompt-builder.js`: Ollamaへ送る指示文
 - `js/ollama-client.js`: Ollama API通信
-- `js/answer-parser.js`: `<think>` 除去と `[ ]` 抽出
+- `js/answer-parser.js`: `<think>` 除去と最終回答抽出
 - `js/demo-solver.js`: デモモード
 - `js/storage.js`: 設定と履歴
 - `js/clipboard.js`: コピー処理
@@ -42,16 +45,20 @@ Math Answer Paste は、数学・情報系の問題文をローカルの Ollama 
 
 ## 回答形式ルール
 
-答えだけモードでは必ず `[4]`、`[x=4]`、`[2,3]`、`[ウ]`、`[不明]` のように角括弧形式を守ります。途中式・解説モードでも最後の行に `最終回答: [答え]` を含めます。
+answerモードでは答えだけを1行で返します。角括弧は使いません。選択肢問題では `ア`、`イ`、`ウ`、`エ` のように記号のみを扱います。
+
+steps / explain モードでは最後の行に `最終回答: 答え` を含めます。hintモードでは最後の行に `最終回答: ヒントのみ` を含めます。
 
 ## テスト確認項目
 
 - Chromeで拡張を読み込める
 - ポップアップが開く
-- デモモードで固定例が返る
+- デモモードで固定例が角括弧なしで返る
 - Ollamaモードで `POST /api/chat` が呼べる
 - `<think>...</think>` が表示用結果から除去される
-- `[ ]` の最後の回答を抽出できる
+- 最後の空でない1行を最終回答として抽出できる
+- `最終回答:` の後ろだけを表示できる
+- AIが角括弧付きで返しても外側の角括弧を外せる
 - コピーできる
 - 履歴保存と削除ができる
 - 設定が保存される

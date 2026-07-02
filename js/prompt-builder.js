@@ -1,41 +1,55 @@
 import { OUTPUT_MODES } from "./utils.js";
 
-export function buildSystemPrompt(mode) {
-  const modeLabel = OUTPUT_MODES[mode] || OUTPUT_MODES.answer;
-  const base = [
-    "あなたは数学・情報系問題の回答抽出エンジンです。",
-    "ユーザーの問題文を読み、最終回答を必ず角括弧 [ ] 形式で返してください。",
-    "不明な場合は [不明] と返してください。",
-    "DeepSeek-R1系の思考タグは最終回答に含めないでください。",
-    `現在の出力モード: ${modeLabel}`
-  ];
+const SYSTEM_ANSWER = [
+  "\u3042\u306a\u305f\u306f\u6570\u5b66\u30fb\u60c5\u5831\u7cfb\u554f\u984c\u306e\u56de\u7b54\u30a8\u30f3\u30b8\u30f3\u3067\u3059\u3002",
+  "\u7b54\u3048\u3060\u3051\u30921\u884c\u3067\u8fd4\u305b\u3002\u8aac\u660e\u3001\u9014\u4e2d\u5f0f\u3001\u8a18\u53f7\u88c5\u98fe\u306f\u7981\u6b62\u3002\u4e0d\u660e\u306a\u3089\u4e0d\u660e\u3002",
+  "\u9078\u629e\u80a2\u554f\u984c\u306a\u3089\u8a18\u53f7\u306e\u307f\u3002\u4f8b: \u30a2 / \u30a4 / \u30a6 / \u30a8",
+  "\u89d2\u62ec\u5f27\u306f\u4f7f\u308f\u306a\u3044\u3002"
+].join("\n");
 
+const SYSTEM_HINT = [
+  "\u3042\u306a\u305f\u306f\u6570\u5b66\u30fb\u60c5\u5831\u7cfb\u554f\u984c\u306e\u30d2\u30f3\u30c8\u4f5c\u6210\u30a8\u30f3\u30b8\u30f3\u3067\u3059\u3002",
+  "\u7b54\u3048\u306f\u76f4\u63a5\u51fa\u3055\u305a\u3001\u89e3\u304d\u65b9\u306e\u30d2\u30f3\u30c8\u3060\u3051\u3092\u77ed\u304f\u793a\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+  "\u6700\u5f8c\u306e\u884c\u306b\u5fc5\u305a `\u6700\u7d42\u56de\u7b54: \u30d2\u30f3\u30c8\u306e\u307f` \u3092\u542b\u3081\u3066\u304f\u3060\u3055\u3044\u3002",
+  "\u89d2\u62ec\u5f27\u306f\u4f7f\u308f\u306a\u3044\u3002"
+].join("\n");
+
+const SYSTEM_DETAIL = [
+  "\u3042\u306a\u305f\u306f\u6570\u5b66\u30fb\u60c5\u5831\u7cfb\u554f\u984c\u306e\u56de\u7b54\u30a8\u30f3\u30b8\u30f3\u3067\u3059\u3002",
+  "\u5fc5\u8981\u306a\u9014\u4e2d\u5f0f\u307e\u305f\u306f\u7c21\u5358\u306a\u8aac\u660e\u3092\u793a\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+  "\u6700\u5f8c\u306e\u884c\u306b\u5fc5\u305a `\u6700\u7d42\u56de\u7b54: \u7b54\u3048` \u3092\u542b\u3081\u3066\u304f\u3060\u3055\u3044\u3002",
+  "\u89d2\u62ec\u5f27\u306f\u4f7f\u308f\u306a\u3044\u3002"
+].join("\n");
+
+const ANSWER_USER_INSTRUCTION =
+  "\u7b54\u3048\u3060\u3051\u30921\u884c\u3067\u8fd4\u305b\u3002\u8aac\u660e\u3001\u9014\u4e2d\u5f0f\u3001\u8a18\u53f7\u88c5\u98fe\u306f\u7981\u6b62\u3002\u4e0d\u660e\u306a\u3089\u4e0d\u660e\u3002";
+
+export function buildSystemPrompt(mode) {
   if (mode === "answer") {
-    return [
-      ...base,
-      "説明は禁止です。答えだけを短く返してください。",
-      "出力例: [4] / [x=4] / [2,3] / [ウ] / [不明]"
-    ].join("\n");
+    return SYSTEM_ANSWER;
   }
+
+  const modeLabel = OUTPUT_MODES[mode] || OUTPUT_MODES.answer;
+  const modeLine = `\u73fe\u5728\u306e\u51fa\u529b\u30e2\u30fc\u30c9: ${modeLabel}`;
 
   if (mode === "hint") {
-    return [
-      ...base,
-      "答えを直接出さず、解き方のヒントだけを短く示してください。",
-      "最後の行に必ず `最終回答: [ヒントのみ]` を含めてください。"
-    ].join("\n");
+    return `${SYSTEM_HINT}\n${modeLine}`;
   }
 
-  return [
-    ...base,
-    "必要な途中式または簡単な解説を示してください。",
-    "最後の行に必ず `最終回答: [答え]` を含めてください。"
-  ].join("\n");
+  return `${SYSTEM_DETAIL}\n${modeLine}`;
+}
+
+export function buildUserPrompt(question, mode) {
+  if (mode === "answer") {
+    return `/no_think\n${ANSWER_USER_INSTRUCTION}\n\u554f\u984c\uff1a${question}`;
+  }
+
+  return `/no_think\n\u554f\u984c\uff1a${question}`;
 }
 
 export function buildChatMessages(question, mode) {
   return [
     { role: "system", content: buildSystemPrompt(mode) },
-    { role: "user", content: question }
+    { role: "user", content: buildUserPrompt(question, mode) }
   ];
 }

@@ -79,9 +79,10 @@ async function solveQuestion() {
     if (settings.saveHistory) {
       await addHistory({ question, mode, answer: parsed.answer, detail: rawText });
     }
-    setStatus(statusMessage, "結果を作成しました。", "success");
+    setStatus(statusMessage, "最終回答を作成しました。", "success");
   } catch (error) {
-    answerOutput.textContent = "[エラー]";
+    latestAnswer = "";
+    answerOutput.textContent = "エラー";
     detailOutput.textContent = "";
     detailOutput.classList.remove("has-detail");
     setStatus(statusMessage, error.message, "error");

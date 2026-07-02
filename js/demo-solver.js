@@ -1,13 +1,13 @@
 export function solveDemo(question, mode = "answer") {
   const text = String(question || "").replace(/\s+/g, "");
-  let answer = "[デモ未対応]";
+  let answer = "デモ未対応";
 
   if (/2x\+3=11/.test(text)) {
-    answer = "[x=4]";
+    answer = "x=4";
   } else if (/1011\(2\).*(10進数|10進|変換)/.test(text)) {
-    answer = /ア9イ10ウ11エ12/.test(text) ? "[ウ]" : "[11]";
+    answer = /ア9イ10ウ11エ12/.test(text) ? "ウ" : "11";
   } else if (/800円.*25%/.test(text) || /800.*25%/.test(text)) {
-    answer = "[200]";
+    answer = "200";
   }
 
   if (mode === "steps") {
@@ -19,7 +19,7 @@ export function solveDemo(question, mode = "answer") {
   }
 
   if (mode === "hint") {
-    return "式や選択肢の対応関係を確認してください。\n最終回答: [ヒントのみ]";
+    return "式や選択肢の対応関係を確認してください。\n最終回答: ヒントのみ";
   }
 
   return answer;

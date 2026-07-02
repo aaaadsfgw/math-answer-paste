@@ -1,18 +1,18 @@
 # Math Answer Paste
 
-Math Answer Paste は、数学・情報系の問題文をローカルPC上の Ollama に送り、最終回答を `[ ]` 形式でコピーしやすくする Chrome 拡張機能です。
+Math Answer Paste は、数学・情報系の問題文をローカルPC上の Ollama に送り、答えだけを1行で表示・コピーできる Chrome 拡張機能です。
 
 ## 概要
 
 - 問題文を入力、またはブラウザ上の選択テキストから読み込みます。
 - ローカルの Ollama API `http://localhost:11434/api/chat` にだけ送信します。
 - OpenAI API や外部APIキーは使いません。
-- DeepSeek-R1 系の `<think>...</think>` は表示用の結果から除去します。
+- AIの返答から `<think>...</think>` を除去し、最後の空でない1行を最終回答として扱います。
 - Ollama が使えない環境でも試せるデモモードを用意しています。
 
 ## 作成目的
 
-提出課題や学習用途で、計算問題・情報系の基本問題の答えを短い `[ ]` 形式で扱えるようにするための土台です。
+提出課題や学習用途で、計算問題・情報系の基本問題の答えをすばやくコピーできるようにするための土台です。最終仕様では角括弧を付けず、`x=4` や `ウ` のような答え単体を表示します。
 
 ## 使用技術
 
@@ -38,10 +38,11 @@ ollama pull qwen3:8b
 ollama run qwen3:8b
 ```
 
-## 推奨モデル
+## 推奨モデルと設定
 
 1. `qwen3:8b`
    - RTX 4060 VRAM 8GB 環境で、回答精度と速度のバランスが良かったため第一候補です。
+   - `/no_think` を user message の先頭に付けることで応答速度の改善が見られたため、標準で使います。
 2. `deepseek-r1:14b`
    - 精度重視の候補です。正答できる一方、CPU/GPU混在でやや重くなる可能性があります。
 3. `deepseek-r1:8b`
@@ -54,7 +55,7 @@ ollama run qwen3:8b
 - 出力モード切り替え
 - Ollama連携
 - デモモード
-- `[ ]` 形式の回答抽出
+- 答え単体の抽出
 - クリップボードコピー
 - 履歴保存と削除
 - 設定保存
@@ -68,47 +69,38 @@ ollama run qwen3:8b
 - `help.html`: 使い方とOllama起動方法
 - `about.html`: システム概要と注意事項
 
-## ディレクトリ構成
+## Ollama連携の仕組み
+
+`js/ollama-client.js` が `fetch` で `POST /api/chat` を呼び出します。APIには過去の会話履歴を送らず、毎回その問題だけを単発で処理します。CLIの `/clear` 相当として、`messages` には現在の `system` と `user` だけを入れます。
+
+user message の先頭には `/no_think` を付けます。
 
 ```text
-math-answer-paste/
-  manifest.json
-  popup.html
-  history.html
-  settings.html
-  examples.html
-  help.html
-  about.html
-  css/
-  js/
-  docs/
-  prompts/
-  AGENTS.md
-  README.md
+/no_think
+問題：2x + 3 = 11
 ```
+
+## 出力例
+
+- `2x + 3 = 11` -> `x=4`
+- `1011(2)を10進数に変換` -> `11`
+- `800円の25%` -> `200`
+- `1011(2)` と選択肢 `ア 9 イ 10 ウ 11 エ 12` -> `ウ`
+- 不明な場合 -> `不明`
 
 ## データ保存方法
 
 設定と履歴は `chrome.storage.local` に保存します。ブラウザ外でHTMLを直接開いた場合の確認用に、一部処理は `localStorage` にフォールバックします。
 
-## Ollama連携の仕組み
-
-`js/ollama-client.js` が `fetch` で `POST /api/chat` を呼び出します。送信する内容は、設定画面のモデル名、`stream: false`、`system` と `user` のメッセージです。
-
 ## デモモードについて
 
-Ollamaが起動していなくても、次の固定例はローカルJavaScriptだけで回答します。
-
-- `2x + 3 = 11` -> `[x=4]`
-- `1011(2)を10進数に変換` -> `[11]`
-- `800円の25%` -> `[200]`
-- `1011(2)` と選択肢 `ア 9 イ 10 ウ 11 エ 12` -> `[ウ]`
+Ollamaが起動していなくても、固定例はローカルJavaScriptだけで回答します。デモモードでも角括弧は付けません。
 
 ## よくあるエラー
 
 - 接続できない: `ollama serve` が起動しているか確認してください。
 - モデルがない: `ollama pull モデル名` を実行してください。
-- 返答が遅い: `qwen3:8b` を第一候補として試し、用途に応じて別モデルも比較してください。
+- 返答が遅い: `qwen3:8b` と `/no_think` の組み合わせを第一候補として試してください。
 
 ## AI活用ポイント
 

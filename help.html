@@ -29,21 +29,21 @@
         <ol>
           <li>問題文を入力、またはブラウザで選択中のテキストを読み込みます。</li>
           <li>出力モードを選び、「解く」を押します。</li>
-          <li>表示された `[ ]` 形式の結果をコピーして使います。</li>
+          <li>表示された答えだけ1行の結果をコピーして使います。</li>
         </ol>
       </section>
       <section class="article-block">
         <h2>Ollamaの起動確認</h2>
         <pre class="code-block">ollama serve
-ollama pull deepseek-r1:14b
-ollama run deepseek-r1:14b</pre>
+ollama pull qwen3:8b
+ollama run qwen3:8b</pre>
       </section>
       <section class="article-block">
         <h2>よくあるエラー</h2>
         <ul>
           <li>接続できない場合は Ollama が起動しているか確認してください。</li>
           <li>モデルが見つからない場合は `ollama pull モデル名` を実行してください。</li>
-          <li>重い場合は `deepseek-r1:8b` や `qwen3:8b` へ切り替えてください。</li>
+          <li>重い場合は `qwen3:8b` と `/no_think` の組み合わせを試してください。</li>
         </ul>
       </section>
     </main>

@@ -4,22 +4,22 @@ const examples = [
   {
     title: "一次方程式",
     question: "2x + 3 = 11 を解きなさい。",
-    expected: "[x=4]"
+    expected: "x=4"
   },
   {
     title: "2進数変換",
     question: "1011(2)を10進数に変換しなさい。",
-    expected: "[11]"
+    expected: "11"
   },
   {
     title: "割合",
     question: "800円の25%はいくらですか。",
-    expected: "[200]"
+    expected: "200"
   },
   {
     title: "選択肢",
     question: "1011(2)を10進数に変換。ア 9 イ 10 ウ 11 エ 12",
-    expected: "[ウ]"
+    expected: "ウ"
   }
 ];
 
