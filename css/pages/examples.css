@@ -1,0 +1,20 @@
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.example-card {
+  padding: 16px;
+  text-align: left;
+}
+
+.example-card h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.example-card p {
+  color: var(--muted);
+  margin-bottom: 12px;
+}

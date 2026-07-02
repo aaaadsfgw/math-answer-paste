@@ -1,0 +1,30 @@
+.input-panel {
+  margin-bottom: 14px;
+}
+
+.result-panel {
+  min-height: 190px;
+}
+
+.answer-output {
+  display: block;
+  min-height: 70px;
+  border-radius: 8px;
+  background: #eaf2ff;
+  color: #0c3975;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  padding: 16px;
+}
+
+.detail-output {
+  display: none;
+  margin-top: 12px;
+  max-height: 180px;
+}
+
+.detail-output.has-detail {
+  display: block;
+}

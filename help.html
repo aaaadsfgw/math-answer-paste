@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ヘルプ - Math Answer Paste</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/help.css">
+  </head>
+  <body class="app-body">
+    <header class="topbar">
+      <a class="brand" href="popup.html">Math Answer Paste</a>
+      <nav class="nav-links" aria-label="画面">
+        <a href="popup.html">解く</a>
+        <a href="history.html">履歴</a>
+        <a href="settings.html">設定</a>
+        <a href="examples.html">例題</a>
+        <a href="help.html" aria-current="page">ヘルプ</a>
+        <a href="about.html">About</a>
+      </nav>
+    </header>
+
+    <main class="page-shell article-shell">
+      <h1>ヘルプ</h1>
+      <section class="article-block">
+        <h2>基本の使い方</h2>
+        <ol>
+          <li>問題文を入力、またはブラウザで選択中のテキストを読み込みます。</li>
+          <li>出力モードを選び、「解く」を押します。</li>
+          <li>表示された `[ ]` 形式の結果をコピーして使います。</li>
+        </ol>
+      </section>
+      <section class="article-block">
+        <h2>Ollamaの起動確認</h2>
+        <pre class="code-block">ollama serve
+ollama pull deepseek-r1:14b
+ollama run deepseek-r1:14b</pre>
+      </section>
+      <section class="article-block">
+        <h2>よくあるエラー</h2>
+        <ul>
+          <li>接続できない場合は Ollama が起動しているか確認してください。</li>
+          <li>モデルが見つからない場合は `ollama pull モデル名` を実行してください。</li>
+          <li>重い場合は `deepseek-r1:8b` や `qwen3:8b` へ切り替えてください。</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

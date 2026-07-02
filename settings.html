@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>設定 - Math Answer Paste</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/settings.css">
+  </head>
+  <body class="app-body">
+    <header class="topbar">
+      <a class="brand" href="popup.html">Math Answer Paste</a>
+      <nav class="nav-links" aria-label="画面">
+        <a href="popup.html">解く</a>
+        <a href="history.html">履歴</a>
+        <a href="settings.html" aria-current="page">設定</a>
+        <a href="examples.html">例題</a>
+        <a href="help.html">ヘルプ</a>
+        <a href="about.html">About</a>
+      </nav>
+    </header>
+
+    <main class="page-shell narrow-shell">
+      <section class="panel">
+        <h1>設定</h1>
+        <form id="settingsForm" class="settings-form">
+          <label class="field">
+            <span>モデル名</span>
+            <input id="modelName" class="input" list="modelSuggestions" type="text" autocomplete="off">
+            <datalist id="modelSuggestions">
+              <option value="qwen3:8b"></option>
+              <option value="deepseek-r1:14b"></option>
+              <option value="deepseek-r1:8b"></option>
+            </datalist>
+          </label>
+
+          <label class="field">
+            <span>Ollama API URL</span>
+            <input id="apiUrl" class="input" type="url">
+          </label>
+
+          <label class="field">
+            <span>デフォルト出力モード</span>
+            <select id="defaultMode" class="select">
+              <option value="answer">答えだけ</option>
+              <option value="steps">途中式つき</option>
+              <option value="explain">簡単な解説つき</option>
+              <option value="hint">ヒントだけ</option>
+            </select>
+          </label>
+
+          <label class="switch-row">
+            <input id="demoMode" type="checkbox">
+            <span>デモモード</span>
+          </label>
+
+          <label class="switch-row">
+            <input id="saveHistory" type="checkbox">
+            <span>履歴保存</span>
+          </label>
+
+          <div class="toolbar">
+            <button class="button primary" type="submit">保存</button>
+            <button id="resetButton" class="button secondary" type="button">初期値に戻す</button>
+          </div>
+        </form>
+        <p id="settingsStatus" class="status-message" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script type="module" src="js/settings.js"></script>
+  </body>
+</html>

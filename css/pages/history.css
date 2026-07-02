@@ -1,0 +1,24 @@
+.history-list {
+  display: grid;
+  gap: 12px;
+}
+
+.history-card {
+  padding: 14px;
+}
+
+.history-card h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.history-meta {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.history-answer {
+  color: #0c3975;
+  font-size: 22px;
+  font-weight: 800;
+}
