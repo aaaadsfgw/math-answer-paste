@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS = {
 
 const COMMAND_SOLVE_SELECTION = "solve-selection-to-clipboard";
 const BADGE_RESET_MS = 2500;
+const TOAST_ANSWER_MAX_LENGTH = 48;
 
 async function ensureDefaultSettings() {
   const data = await chrome.storage.local.get("settings");
@@ -43,6 +44,20 @@ async function sendTabMessage(tabId, message) {
     });
     return chrome.tabs.sendMessage(tabId, message);
   }
+}
+
+async function showToast(tabId, text, toastType = "neutral") {
+  try {
+    await sendTabMessage(tabId, { type: "SHOW_TOAST", text, toastType });
+  } catch (error) {
+    console.warn("トーストを表示できませんでした。", error);
+  }
+}
+
+function shortenAnswer(answer) {
+  const text = String(answer || "").trim();
+  if (text.length <= TOAST_ANSWER_MAX_LENGTH) return text;
+  return `${text.slice(0, TOAST_ANSWER_MAX_LENGTH)}...`;
 }
 
 async function getSourceText(tabId) {
@@ -81,27 +96,35 @@ async function solveWithSettings(question, settings) {
 }
 
 async function handleSolveSelectionShortcut() {
-  const tab = await getActiveTab();
-  await setBadge("...", "#64748b");
+  let tab;
 
-  const question = await getSourceText(tab.id);
-  const settings = await getSettings();
-  const { rawText, answer } = await solveWithSettings(question, settings);
+  try {
+    tab = await getActiveTab();
+    await setBadge("...", "#64748b");
+    await showToast(tab.id, "解析中...", "loading");
 
-  await copyAnswerToTab(tab.id, answer);
+    const question = await getSourceText(tab.id);
+    const settings = await getSettings();
+    const { rawText, answer } = await solveWithSettings(question, settings);
 
-  if (settings.saveHistory) {
-    await addHistory({ question, mode: "answer", answer, detail: rawText, source: "shortcut" });
+    await copyAnswerToTab(tab.id, answer);
+
+    if (settings.saveHistory) {
+      await addHistory({ question, mode: "answer", answer, detail: rawText, source: "shortcut" });
+    }
+
+    await setBadge("OK", "#16a34a");
+    await showToast(tab.id, `コピー完了: ${shortenAnswer(answer)}`, "success");
+  } catch (error) {
+    console.error(error);
+    await setBadge("ERR", "#dc2626");
+    if (tab?.id) {
+      await showToast(tab.id, `エラー: ${error.message}`, "error");
+    }
   }
-
-  await setBadge("OK", "#16a34a");
 }
 
 chrome.commands.onCommand.addListener((command) => {
   if (command !== COMMAND_SOLVE_SELECTION) return;
-
-  handleSolveSelectionShortcut().catch((error) => {
-    console.error(error);
-    setBadge("ERR", "#dc2626");
-  });
+  handleSolveSelectionShortcut();
 });
