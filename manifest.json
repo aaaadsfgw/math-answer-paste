@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Math Answer Paste",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Solve selected math and information-system questions with local Ollama and copy only the final answer.",
   "permissions": [
     "storage",
@@ -25,8 +25,8 @@
   "commands": {
     "solve-selection-to-clipboard": {
       "suggested_key": {
-        "default": "Ctrl+Shift+C",
-        "mac": "Command+Shift+C"
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
       },
       "description": "Solve selected text and copy the final answer"
     }
