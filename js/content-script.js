@@ -20,15 +20,6 @@ function getPageSelectionText() {
   return selection ? selection.toString() : "";
 }
 
-async function readClipboardText() {
-  try {
-    if (!navigator.clipboard?.readText) return "";
-    return await navigator.clipboard.readText();
-  } catch {
-    return "";
-  }
-}
-
 async function writeClipboardText(text) {
   try {
     if (navigator.clipboard?.writeText) {
@@ -102,7 +93,12 @@ function showShortcutToast(text, type = "neutral") {
   });
 
   clearTimeout(toastTimerId);
-  const visibleMs = type === "loading" ? 10000 : 3200;
+
+  if (type === "loading") {
+    toastTimerId = 0;
+    return;
+  }
+
   toastTimerId = window.setTimeout(() => {
     toast.style.opacity = "0";
     toast.style.transform = "translateY(-4px)";
@@ -111,7 +107,7 @@ function showShortcutToast(text, type = "neutral") {
         toast.remove();
       }
     }, 180);
-  }, visibleMs);
+  }, 3200);
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -132,17 +128,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message?.type === "GET_SOURCE_TEXT") {
-    (async () => {
-      const selectionText = getPageSelectionText().trim();
-      if (selectionText) {
-        sendResponse({ text: selectionText, source: "selection" });
-        return;
-      }
-
-      const clipboardText = (await readClipboardText()).trim();
-      sendResponse({ text: clipboardText, source: clipboardText ? "clipboard" : "none" });
-    })();
-    return true;
+    const selectionText = getPageSelectionText().trim();
+    sendResponse({ text: selectionText, source: selectionText ? "selection" : "none" });
+    return;
   }
 
   if (message?.type === "SET_CLIPBOARD_TEXT") {
