@@ -49,7 +49,7 @@ async function getSourceText(tabId) {
   const response = await sendTabMessage(tabId, { type: "GET_SOURCE_TEXT" });
   const text = trimQuestion(response?.text || "");
   if (!text) {
-    throw new Error("問題文が見つかりません。ページ上で問題文を選択してから Ctrl+Shift+C を押してください。");
+    throw new Error("問題文が見つかりません。ページ上で問題文を選択してから Ctrl+Shift+Y を押してください。");
   }
   return text;
 }
