@@ -1,13 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Math Answer Paste",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Solve selected math and information-system questions with local Ollama and copy only the final answer.",
   "permissions": [
     "storage",
     "activeTab",
     "scripting",
-    "clipboardRead",
     "clipboardWrite"
   ],
   "host_permissions": [
