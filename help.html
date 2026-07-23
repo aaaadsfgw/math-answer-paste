@@ -46,17 +46,29 @@
         <p>ショートカットが反応しない場合は、Chromeの <code>chrome://extensions/shortcuts</code> で割り当てを確認してください。</p>
       </section>
       <section class="article-block">
+        <h2>Ollamaのインストール</h2>
+        <p>Ollama未導入の場合は、公式サイトからインストールします。Windowsでは <code>OllamaSetup.exe</code> をダウンロードして実行する方法が分かりやすいです。</p>
+        <pre class="code-block">公式ダウンロードページ:
+https://ollama.com/download
+
+Windows用ダウンロードページ:
+https://ollama.com/download/windows</pre>
+        <p>インストール後、PowerShell または コマンドプロンプトで次を実行し、バージョン番号が表示されれば成功です。</p>
+        <pre class="code-block">ollama --version</pre>
+      </section>
+      <section class="article-block">
         <h2>Ollamaの起動確認</h2>
-        <pre class="code-block">ollama serve
-ollama pull qwen3:8b
+        <pre class="code-block">ollama pull qwen3:8b
 ollama run qwen3:8b</pre>
+        <p>起動状態を確認する場合は、別のターミナルで次を実行します。</p>
+        <pre class="code-block">ollama ps</pre>
       </section>
       <section class="article-block">
         <h2>よくあるエラー</h2>
         <ul>
           <li>接続できない場合は Ollama が起動しているか確認してください。</li>
-          <li>モデルが見つからない場合は `ollama pull モデル名` を実行してください。</li>
-          <li>重い場合は `qwen3:8b` と `/no_think` の組み合わせを試してください。</li>
+          <li>モデルが見つからない場合は <code>ollama pull qwen3:8b</code> を実行してください。</li>
+          <li>重い場合は <code>qwen3:8b</code> と <code>/no_think</code> の組み合わせを試してください。</li>
           <li>特定ページで選択テキストを取得できない場合は、popup画面に手動で貼り付けてください。</li>
         </ul>
       </section>
