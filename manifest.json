@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Math Answer Paste",
-  "version": "0.1.0",
-  "description": "Send math and information-system questions to local Ollama and copy bracketed answers.",
+  "version": "0.2.0",
+  "description": "Solve selected math and information-system questions with local Ollama and copy only the final answer.",
   "permissions": [
     "storage",
     "activeTab",
     "scripting",
+    "clipboardRead",
     "clipboardWrite"
   ],
   "host_permissions": [
@@ -18,7 +19,17 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "js/background.js"
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "commands": {
+    "solve-selection-to-clipboard": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+C",
+        "mac": "Command+Shift+C"
+      },
+      "description": "Solve selected text and copy the final answer"
+    }
   },
   "content_scripts": [
     {
