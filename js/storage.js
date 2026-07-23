@@ -2,7 +2,7 @@ export const DEFAULT_SETTINGS = {
   modelName: "qwen3:8b",
   apiUrl: "http://localhost:11434/api/chat",
   defaultMode: "answer",
-  demoMode: true,
+  demoMode: false,
   saveHistory: true
 };
 
